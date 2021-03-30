@@ -1,0 +1,1 @@
+arm-none-eabi-ld *.o -TLPC2129.ld -o main.elf
