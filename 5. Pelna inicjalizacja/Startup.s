@@ -12,7 +12,6 @@
 	.global _bss_end             	// koniec .bss
 	.global _stack                  // szczyt stosu
 	
-
 // Rozmiary stosow trybow specjalnych
 	.set  UND_STACK_SIZE, 0x00000004
 	.set  ABT_STACK_SIZE, 0x00000004
@@ -29,8 +28,8 @@
 	.set  MODE_UND, 0x1B            // Undefined Mode
 	.set  MODE_SYS, 0x1F            // System Mode
 
-	.equ  I_BIT, 0x80               // Bit wylaczenia przerwania irq
-	.equ  F_BIT, 0x40               // Bit wylaczenia przerwania fiq
+	.set  I_BIT, 0x80               // Bit wylaczenia przerwania irq
+	.set  F_BIT, 0x40               // Bit wylaczenia przerwania fiq
 
 	.section  .init
 	.global isr_vectors
@@ -46,59 +45,59 @@ isr_vectors:
 	ldr   	pc, _fiq                // FIQ - _fiq
 
 _start:	.word start
-_undf:  .word _reset				// undefined - _reset
-_swi:   .word _reset                // SWI - _reset
-_pabt:  .word _reset                // program abort - _reset
-_dabt:  .word _reset                // data abort - _reset
-_irq:   .word _reset                // IRQ - _reset
-_fiq:   .word _reset                // FIQ - _reset
+_undf:  .word Int_UndefinedInstruction	// undefined 
+_swi:   .word Int_SoftwareInterrupt		// SWI 
+_pabt:  .word Int_ProgramAbort			// program abort
+_dabt:  .word Int_DataAbort				// data abort
+_irq:   .word _loop						// IRQ glownie wypelniacz, bo i tak czyta z VIC
+_fiq:   .word Int_FIQ					// FIQ 
 
 start:
 
-    ldr   r0,=_stack
-	msr   CPSR_c,#MODE_UND|I_BIT|F_BIT // Undefined Instruction Mode
-	mov   sp,r0
-	sub   r0,r0,#UND_STACK_SIZE
-	msr   CPSR_c,#MODE_ABT|I_BIT|F_BIT // Abort Mode
-	mov   sp,r0
-	sub   r0,r0,#ABT_STACK_SIZE
-	msr   CPSR_c,#MODE_FIQ|I_BIT|F_BIT // FIQ Mode
-	mov   sp,r0
-	sub   r0,r0,#FIQ_STACK_SIZE
-	msr   CPSR_c,#MODE_IRQ|I_BIT|F_BIT // IRQ Mode
-	mov   sp,r0
-	sub   r0,r0,#IRQ_STACK_SIZE
-	msr   CPSR_c,#MODE_SVC|I_BIT|F_BIT // Supervisor Mode
-	mov   sp,r0
-	sub   r0,r0,#SVC_STACK_SIZE
-	msr   CPSR_c,#MODE_SYS|I_BIT|F_BIT // System Mode
-	mov   sp,r0
+    ldr   r0, =_stack
+	msr   CPSR_c, #MODE_UND|I_BIT|F_BIT // Undefined Instruction Mode
+	mov   sp, r0
+	sub   r0, r0, #UND_STACK_SIZE
+	msr   CPSR_c, #MODE_ABT|I_BIT|F_BIT // Abort Mode
+	mov   sp, r0
+	sub   r0, r0, #ABT_STACK_SIZE
+	msr   CPSR_c, #MODE_FIQ|I_BIT|F_BIT // FIQ Mode
+	mov   sp, r0
+	sub   r0, r0, #FIQ_STACK_SIZE
+	msr   CPSR_c, #MODE_IRQ|I_BIT|F_BIT // IRQ Mode
+	mov   sp, r0
+	sub   r0, r0, #IRQ_STACK_SIZE
+	msr   CPSR_c, #MODE_SVC|I_BIT|F_BIT // Supervisor Mode
+	mov   sp, r0
+	sub   r0, r0, #SVC_STACK_SIZE
+	msr   CPSR_c, #MODE_SYS|I_BIT|F_BIT // System Mode
+	mov   sp, r0
 
-	ldr   r1,=_etext                // Poczatek danych (wartosc ROM)
-	ldr   r2,=_data                 // Poczatek danych (RAM)
-	ldr   r3,=_edata                // Koniec danych (RAM)
-1:	cmp   r2,r3                     // Jak rozne to znaczy ze sa dane
-	ldrlo r0,[r1],#4                // kopiowanie
-	strlo r0,[r2],#4
+	ldr   r1, =_etext                // Poczatek danych (wartosc ROM)
+	ldr   r2, =_data                 // Poczatek danych (RAM)
+	ldr   r3, =_edata                // Koniec danych (RAM)
+1:	cmp   r2, r3                     // Jak rozne to znaczy ze sa dane
+	ldrlo r0, [r1],#4                // kopiowanie
+	strlo r0, [r2],#4
 	blo   1b           
 
 // Wyczysc bss
-	mov   r0,#0                     
-	ldr   r1,=_bss_start           	// Poczatek .bss
-	ldr   r2,=_bss_end           	// Koniec .bss
-2:	cmp   r1,r2                     // Jak rozne to czysc
-	strlo r0,[r1],#4                
+	mov   r0, #0                     
+	ldr   r1, =_bss_start           	// Poczatek .bss
+	ldr   r2, =_bss_end           	// Koniec .bss
+2:	cmp   r1, r2                     // Jak rozne to czysc
+	strlo r0, [r1],#4                
 	blo   2b                        
 	
 // Wywolanie main
-	mov   r0,#0                     // bez argumentu
-	mov   r1,r0
-	mov   r2,r0
-	mov   fp,r0                     // null frame pointer
-	mov   r7,r0                     // null frame pointer for thumb
-	ldr   r0,=main
+	mov   r0, #0                     // bez argumentu
+	mov   r1, r0
+	mov   r2, r0
+	mov   fp, r0                     // null frame pointer
+	mov   r7, r0                     // null frame pointer for thumb
+	ldr   r0, =main
 	bx    r0                       // skocz to main()
-		
-_reset:
-	b	_reset
+
+_loop:
+	b	_loop
 	
