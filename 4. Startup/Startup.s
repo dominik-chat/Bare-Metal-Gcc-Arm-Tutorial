@@ -44,7 +44,7 @@ isr_vectors:
 	ldr   	pc, [pc,#-0xFF0]        // IRQ - read the VIC
 	ldr   	pc, _fiq                // FIQ - _fiq
 
-
+_start:	.word start
 _undf:  .word _reset				// undefined - _reset
 _swi:   .word _reset                // SWI - _reset
 _pabt:  .word _reset                // program abort - _reset
@@ -52,7 +52,7 @@ _dabt:  .word _reset                // data abort - _reset
 _irq:   .word _reset                // IRQ - _reset
 _fiq:   .word _reset                // FIQ - _reset
 
-_start:
+start:
 
     ldr   r0,=_stack
 	msr   CPSR_c,#MODE_UND|I_BIT|F_BIT // Undefined Instruction Mode
@@ -95,9 +95,8 @@ _start:
 	mov   r2,r0
 	mov   fp,r0                     // null frame pointer
 	mov   r7,r0                     // null frame pointer for thumb
-	ldr   r10,=main
-	mov   lr,pc
-	bx    r10                       // skocz to main()
+	ldr   r0,=main
+	bx    r0                       // skocz to main()
 		
 _reset:
 	b	_reset

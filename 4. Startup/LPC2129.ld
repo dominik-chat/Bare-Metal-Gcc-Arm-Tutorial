@@ -19,9 +19,9 @@ SECTIONS
   
 	.text :
 	{
-		KEEP(*(.init))            	/* Startup code */
-		*(.text)                   /* remaining code */
-		*(.rodata)                 /* read-only data (constants) */
+		KEEP(*(.init))            	/* wektory przerwan i init */
+		*(.text)                   /* caly kod */
+		*(.rodata)                 /* stale */
 		*(.rodata*)
 		*(.glue_7)
 		*(.glue_7t)
@@ -30,17 +30,17 @@ SECTIONS
   
 	_etext = . ;
 
-	/* .data section which is used for initialized data */
+	/* zmienne z ustalona wartoscia */
 	.data :
 	{
 		_data = .;
-		KEEP(*(.data))
+		*(.data)
 	} > RAM AT> ROM
 	. = ALIGN(4);
 
 	_edata = . ;
 
-	/* .bss section which is used for uninitialized data */
+	/* zmienne bez ustalonej wartosci */
 	.bss (NOLOAD) :
 	{
 		_bss_start = . ;
