@@ -53,7 +53,7 @@ _irq:   .word _loop						// IRQ glownie wypelniacz, bo i tak czyta z VIC
 _fiq:   .word Int_FIQ					// FIQ 
 
 start:
-
+//ustawienie stosow wszystkich trybow procesora
     ldr   r0, =_stack
 	msr   CPSR_c, #MODE_UND|I_BIT|F_BIT // Undefined Instruction Mode
 	mov   sp, r0
@@ -73,6 +73,7 @@ start:
 	msr   CPSR_c, #MODE_SYS|I_BIT|F_BIT // System Mode
 	mov   sp, r0
 
+//kopiowanie zainicjalizowanego data flash -> ram
 	ldr   r1, =_etext                // Poczatek danych (wartosc ROM)
 	ldr   r2, =_data                 // Poczatek danych (RAM)
 	ldr   r3, =_edata                // Koniec danych (RAM)
@@ -94,9 +95,8 @@ start:
 	mov   r1, r0
 	mov   r2, r0
 	mov   fp, r0                     // null frame pointer
-	mov   r7, r0                     // null frame pointer for thumb
-	ldr   r0, =main
-	bx    r0                       // skocz to main()
+	ldr   lr, =main
+	bx    lr                       // skocz to main()
 
 _loop:
 	b	_loop

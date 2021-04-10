@@ -13,13 +13,12 @@ SECTIONS
 {
 	.init :
 	{
-		KEEP(*(.init))
+		KEEP(*(.init))				/* wektory przerwan i init */
 	}
 	. = ALIGN(4);
   
 	.text :
-	{
-		KEEP(*(.init))            	/* wektory przerwan i init */
+	{       	
 		*(.text)                   /* caly kod */
 		*(.rodata)                 /* stale */
 		*(.rodata*)
@@ -52,7 +51,6 @@ SECTIONS
 	
 	_bss_end = . ;
 
-	/* .stack ALIGN(256) : */
 	.stack :
 	{
 		. = ALIGN(256);
