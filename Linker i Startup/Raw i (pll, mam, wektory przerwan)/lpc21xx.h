@@ -1,7 +1,12 @@
-#ifndef ARM7TDMI_S
-#define ARM7TDMI_S
+#ifndef LPC21XX_H
+#define LPC21XX_H
 
-#include "arm7tdmi-s.h"
+//taka funkcja ma nizszy priorytet niz zwykla funkcja o tej samej nazwie
+#define _weak __attribute__ ((weak))	
+
+//ten atrybut pozwala kompilatorowi w poprawny sposob zbudowac procedure przerwania
+//poprawne wartosci to: IRQ, FIQ, SWI, ABORT, UNDEF.
+#define _interrupt(type) __attribute__ ((interrupt ("type")))
 
 /* DEFINE DO FUNKCJI INICJACYJNYCH */
 #define PLLCFG_P_1_bm 	0x00
@@ -9,10 +14,16 @@
 #define PLLCFG_P_4_bm 	0x40
 #define PLLCFG_P_8_bm 	0x60
 
+/* FUNKCJE STAŁE DLA ARM7TDMI-S */
+_weak _interrupt(UNDEF) void Int_UndefinedInstruction(void);
+_weak _interrupt(SWI) void Int_SoftwareInterrupt(void);
+_weak _interrupt(ABORT) void Int_ProgramAbort(void);
+_weak _interrupt(ABORT) void Int_DataAbort(void);
+_weak _interrupt(FIQ) void Int_FIQ(void);
+
 /* PROTOTYPY FUNKCJI */
 void InitPLL(unsigned char ucMultiplier, unsigned char ucDividerMask);
 void InitMAM(unsigned char ucPrefetchCycles);
-
 
 /* WATCHDOG */
 #define WATCHDOG_BASE	0xE0000000

@@ -25,6 +25,5 @@ SECTIONS
 	.bss (NOLOAD) :
 	{
 		*(.bss)
-		. = ALIGN(4);
 	} > RAM
 }
