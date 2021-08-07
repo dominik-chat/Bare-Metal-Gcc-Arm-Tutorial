@@ -8,8 +8,8 @@ int main()
 {
 	while(1)
 	{
-		cByte++;
-		sHalfWord++;
-		lWord++;
+		cByte -= 3;
+		sHalfWord -= 5;
+		lWord -= 7;
 	}
 }

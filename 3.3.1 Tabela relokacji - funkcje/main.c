@@ -6,7 +6,7 @@ int main()
 	
 	while(1)
 	{
-		//Pin_Set();
+		Pin_Set();
 		Pin_Clear();
 	}
 	

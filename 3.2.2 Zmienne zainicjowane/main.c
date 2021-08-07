@@ -2,7 +2,7 @@
 
 char cByte = 0x12;
 short sHalfWord = 0x1234;
-long Word = 0x12345678;
+long lWord = 0x12345678;
 
 int main()
 {
@@ -10,6 +10,6 @@ int main()
 	{
 		cByte++;
 		sHalfWord++;
-		Word++;
+		lWord++;
 	}
 }
