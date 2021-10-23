@@ -7,7 +7,7 @@ int main()
 	while(1)
 	{
 		Pin_Set();
-		Pin_Clear();
+//		Pin_Clear(); //For 3.3.1 uncomment this line
 	}
 	
 }

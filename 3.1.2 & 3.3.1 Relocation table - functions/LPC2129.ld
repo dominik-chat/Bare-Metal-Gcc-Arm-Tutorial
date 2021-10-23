@@ -1,4 +1,5 @@
-ENTRY(isr_vectors)
+/* For 3.3.1 Entry is isr_vectors */
+ENTRY(main)
 STACK_SIZE = 0x400;
 
 /* Definicja pamieci LPC2129 */
