@@ -1,8 +1,6 @@
-/* For 3.3.1 Entry is isr_vectors */
-ENTRY(main)
 STACK_SIZE = 0x400;
 
-/* Definicja pamieci LPC2129 */
+/* Memory definitons LPC2129 */
 MEMORY
 {
 	ROM (rx) : ORIGIN = 0x00000000, LENGTH = 0x0003E000
@@ -14,14 +12,14 @@ SECTIONS
 {
 	.init :
 	{
-		KEEP(*(.init))				/* wektory przerwan i init */
+		KEEP(*(.init))				/* isr vectors and  init */
 	}
 	. = ALIGN(4);
   
 	.text :
 	{       	
-		*(.text)                   /* caly kod */
-		*(.rodata)                 /* stale */
+		*(.text)                   /* code */
+		*(.rodata)                 /* constants */
 		*(.rodata*)
 		*(.glue_7)
 		*(.glue_7t)
@@ -30,7 +28,7 @@ SECTIONS
   
 	_etext = . ;
 
-	/* zmienne z ustalona wartoscia */
+	/* initialzed data */
 	.data :
 	{
 		_data = .;
@@ -40,23 +38,22 @@ SECTIONS
 
 	_edata = . ;
 
-	/* zmienne bez ustalonej wartosci */
+	/* uninitialized data */
 	.bss (NOLOAD) :
 	{
 		_bss_start = . ;
 		*(.bss)
 		*(COMMON)
-		. = ALIGN(4);
 	} > RAM
 	. = ALIGN(4);
 	
 	_bss_end = . ;
 
-	.stack :
+	/* left space for stack */
+	.stack (NOLOAD) :
 	{
-		. = ALIGN(256);
 		. += STACK_SIZE;
-		PROVIDE (_stack = .);
+		_stack = . ;
 	} > RAM
 
 	_end = . ;
