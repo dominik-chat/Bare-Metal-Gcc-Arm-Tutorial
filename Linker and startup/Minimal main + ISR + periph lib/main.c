@@ -1,19 +1,17 @@
 #include "lpc21xx.h"
 
+/* Around 500ms delay */
 void Delay() 
 {
 	unsigned int uiLoopCounter;
 	
-	for(uiLoopCounter = 0; uiLoopCounter < 500000; uiLoopCounter++)
+	for(uiLoopCounter = 0; uiLoopCounter < 100000; uiLoopCounter++)
 	{
 	}
 }
 
 int main()
 {
-	InitPLL(5, PLLCFG_P_2_bm);
-	InitMAM(4);
-	
 	IO1DIR = 0xFF0000;
 	
 	while(1)
